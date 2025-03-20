@@ -1,0 +1,138 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Create New Case</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ case_form.as_p }}
+
+    <h2>Natural Persons</h2>
+    <div id="natural-person-forms">
+        {% for form in natural_person_forms %}
+            <div class="form-group">
+                {{ form.management_form }}
+                {{ form.non_field_errors }}
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="addNaturalPerson()">Add Natural Person</button>
+
+    <h2>Legal Entities</h2>
+    <div id="legal-entity-forms">
+        {% for form in legal_entity_forms %}
+            <div class="form-group">
+                {{ form.management_form }}
+                {{ form.non_field_errors }}
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="addLegalEntity()">Add Legal Entity</button>
+
+    <input type="hidden" name="natural_person_count" id="natural_person_count" value="{{ natural_person_forms|length }}">
+    <input type="hidden" name="legal_entity_count" id="legal_entity_count" value="{{ legal_entity_forms|length }}">
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    function addNaturalPerson() {
+        var count = parseInt(document.getElementById('natural_person_count').value);
+        var newDiv = document.createElement('div');
+        newDiv.className = 'form-group';
+        newDiv.innerHTML = `
+            <label for="id_np-${count}-name">Name:</label>
+            <input type="text" name="np-${count}-name" id="id_np-${count}-name" required>
+            <br>
+            <label for="id_np-${count}-gender">Gender:</label>
+            <select name="np-${count}-gender" id="id_np-${count}-gender" required>
+                <option value="">---------</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+            <br>
+            <label for="id_np-${count}-date_of_birth">Date of Birth:</label>
+            <input type="date" name="np-${count}-date_of_birth" id="id_np-${count}-date_of_birth" required>
+            <br>
+            <label for="id_np-${count}-nationality">Nationality:</label>
+            <input type="text" name="np-${count}-nationality" id="id_np-${count}-nationality" required>
+            <br>
+            <label for="id_np-${count}-work_unit">Work Unit:</label>
+            <input type="text" name="np-${count}-work_unit" id="id_np-${count}-work_unit">
+            <br>
+            <label for="id_np-${count}-position">Position:</label>
+            <input type="text" name="np-${count}-position" id="id_np-${count}-position">
+            <br>
+            <label for="id_np-${count}-phone_number">Phone Number:</label>
+            <input type="text" name="np-${count}-phone_number" id="id_np-${count}-phone_number" required>
+            <br>
+            <label for="id_np-${count}-domicile_address">Domicile Address:</label>
+            <input type="text" name="np-${count}-domicile_address" id="id_np-${count}-domicile_address" required>
+            <br>
+            <label for="id_np-${count}-usual_residence">Usual Residence:</label>
+            <input type="text" name="np-${count}-usual_residence" id="id_np-${count}-usual_residence">
+            <br>
+            <label for="id_np-${count}-id_type">ID Type:</label>
+            <input type="text" name="np-${count}-id_type" id="id_np-${count}-id_type" required>
+            <br>
+            <label for="id_np-${count}-id_number">ID Number:</label>
+            <input type="text" name="np-${count}-id_number" id="id_np-${count}-id_number" required>
+            <br>
+            <label for="id_np-${count}-role">Role:</label>
+            <select name="np-${count}-role" id="id_np-${count}-role" required>
+                <option value="">---------</option>
+                <option value="PLT">Plaintiff</option>
+                <option value="DEF">Defendant</option>
+                <option value="TP">Third Party</option>
+            </select>
+        `;
+        document.getElementById('natural-person-forms').appendChild(newDiv);
+        document.getElementById('natural_person_count').value = count + 1;
+    }
+
+    function addLegalEntity() {
+        var count = parseInt(document.getElementById('legal_entity_count').value);
+        var newDiv = document.createElement('div');
+        newDiv.className = 'form-group';
+        newDiv.innerHTML = `
+            <label for="id_le-${count}-name">Name:</label>
+            <input type="text" name="le-${count}-name" id="id_le-${count}-name" required>
+            <br>
+            <label for="id_le-${count}-address">Address:</label>
+            <input type="text" name="le-${count}-address" id="id_le-${count}-address" required>
+            <br>
+            <label for="id_le-${count}-registration_place">Registration Place:</label>
+            <input type="text" name="le-${count}-registration_place" id="id_le-${count}-registration_place" required>
+            <br>
+            <label for="id_le-${count}-legal_representative">Legal Representative:</label>
+            <input type="text" name="le-${count}-legal_representative" id="id_le-${count}-legal_representative" required>
+            <br>
+            <label for="id_le-${count}-position">Position:</label>
+            <input type="text" name="le-${count}-position" id="id_le-${count}-position" required>
+            <br>
+            <label for="id_le-${count}-phone_number">Phone Number:</label>
+            <input type="text" name="le-${count}-phone_number" id="id_le-${count}-phone_number" required>
+            <br>
+            <label for="id_le-${count}-credit_code">Credit Code:</label>
+            <input type="text" name="le-${count}-credit_code" id="id_le-${count}-credit_code" required>
+            <br>
+            <label for="id_le-${count}-entity_type">Entity Type:</label>
+            <input type="text" name="le-${count}-entity_type" id="id_le-${count}-entity_type" required>
+            <br>
+            <label for="id_le-${count}-role">Role:</label>
+            <select name="le-${count}-role" id="id_le-${count}-role" required>
+                <option value="">---------</option>
+                <option value="PLT">Plaintiff</option>
+                <option value="DEF">Defendant</option>
+                <option value="TP">Third Party</option>
+            </select>
+        `;
+        document.getElementById('legal-entity-forms').appendChild(newDiv);
+        document.getElementById('legal_entity_count').value = count + 1;
+    }
+</script>
+{% endblock %}
+
+
+
