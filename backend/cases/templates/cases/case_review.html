@@ -1,0 +1,64 @@
+{% extends 'cases/base.html' %}
+
+{% block title %}审核案件{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">审核案件：{{ case.title }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="mb-4">
+            <h6>案件信息</h6>
+            <p><strong>创建者：</strong>{{ case.creator.username }}</p>
+            <p><strong>创建时间：</strong>{{ case.created_at|date:"Y-m-d H:i" }}</p>
+            <p><strong>案件描述：</strong></p>
+            <p>{{ case.description|linebreaks }}</p>
+        </div>
+
+        <div class="mb-4">
+            <h6>当事人信息</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>自然人当事人</h6>
+                    <ul class="list-unstyled">
+                        {% for person in case.natural_persons.all %}
+                        <li>{{ person.name }} ({{ person.get_role_display }})</li>
+                        {% empty %}
+                        <li>无</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>法人当事人</h6>
+                    <ul class="list-unstyled">
+                        {% for entity in case.legal_entities.all %}
+                        <li>{{ entity.name }} ({{ entity.get_role_display }})</li>
+                        {% empty %}
+                        <li>无</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field.errors }}
+                {{ field }}
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'cases:case_detail' case.pk %}" class="btn btn-secondary">返回</a>
+                <button type="submit" class="btn btn-primary">提交审核</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
